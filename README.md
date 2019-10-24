@@ -6,6 +6,15 @@
 ![Alt text](images/nest4.PNG)
 ## Function
 ![Alt text](images/Overview.PNG)
+## DB 설계
+![Alt text](images/db.PNG)
+## 담당 임무
+자료 저장 담당
+1. 노트(문서) 작성
+2. 노트북 생성
+3. 이미지, 파일 첨부
+4. 템플릿 형식 저장 및 적용
+5. 휴지통
 ## Skills
 ![Alt text](images/skills.PNG)
 ## 랜딩 페이지
