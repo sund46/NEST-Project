@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC
+"-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Space_mapper">
+		
+		<insert id="insertSpace" parameterType="Space">
+			INSERT INTO SPACE VALUES(SEQ_SPACENO.NEXTVAL,#{bizNo},#{spaceName},#{spaceExplain},#{rightSet},#{postSpaceDir},DEFAULT)
+			
+			<selectKey keyProperty="spaceNo" resultType="_int" order="AFTER">
+				SELECT SEQ_SPACENO.CURRVAL FROM DUAL
+			</selectKey>	
+			
+		</insert>
+		
+		
+		<insert id="insertCreateMember" parameterType="_int">
+		
+			INSERT INTO SPACE_MEMBER VALUES(SEQ_SNO.NEXTVAL,#{spaceNo},#{mNo},DEFAULT,DEFAULT,DEFAULT,DEFAULT)
+		</insert>
+		
+		<select id="selectSpaceList" parameterType="_int" resultType="Space">
+			
+			SELECT * FROM SPACE WHERE BIZNO=#{bizNo}
+		</select>
+		
+		<select id="selectChatRoomNo" parameterType="ChatRoom" resultType="ChatRoom">
+			
+			SELECT ROOMNO FROM CHATROOM WHERE CHATTERS LIKE CONCAT('%',CONCAT(#{chatter1},'%')) AND CHATTERS LIKE CONCAT('%',CONCAT(#{chatter2},'%'))
+		</select>
+		
+		<insert id="createChatRoomNo" parameterType="ChatRoom">
+			INSERT INTO CHATROOM VALUES(SEQ_ROOMIDX.NEXTVAL,#{chatters},DEFAULT,SEQ_ROOMNO.NEXTVAL)
+		</insert>
+		
+		
+		<resultMap type="note" id="NoteMap">
+		      <result column="nickName" property="nwriter"/>
+	    </resultMap>
+		
+		
+		<select id="selectNoteList" parameterType="_int" resultMap="NoteMap">
+			SELECT * FROM (SELECT NNO,NBNO,SPACENO,NTITLE,NCONTENT,NICKNAME,SHARESCOPE,TRASHCAN,FIXED FROM NOTE N, MEMBER M WHERE N.MNO = M.MNO AND N.SPACENO = #{spaceNo})
+		</select>
+		
+		<select id="selectNoteBookList" parameterType="_int" resultType="noteBook">
+			SELECT * FROM NOTEBOOK
+		</select>
+		
+		<update id="noteFix" parameterType="_int">
+			UPDATE NOTE SET FIXED ='Y' WHERE NNO=#{nno}
+		</update>
+		
+		<update id="noteNotFix" parameterType="_int">
+			UPDATE NOTE SET FIXED ='N' WHERE NNO=#{nno}
+		</update>
+		
+		<select id="selectFixedNoteList" resultType="note">
+			SELECT * FROM NOTE WHERE FIXED='Y'
+		</select>
+		
+		<select id="spaceNoteDetail" parameterType="_int" resultType="note">
+			SELECT * FROM NOTE WHERE SPACENO = #{spaceNo} 
+		</select>
+		
+		<select id="selectOneSpace" parameterType="_int" resultType="Space">
+			SELECT * FROM SPACE WHERE SPACENO = #{spaceNo}
+		</select>
+		
+		
+		
+		
+</mapper>

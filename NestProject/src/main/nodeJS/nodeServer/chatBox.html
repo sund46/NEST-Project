@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.4.1.js"integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="crossorigin="anonymous"></script>
+</head>
+<body>
+
+    <div id="msgBox" style="width:400px; height:400px; border: 1px solid black;">
+      	 	<label id="nickNameLabel"></label>
+      	 	
+      	 	<div style="width:200px; height:200px; border: 1px solid tomato">
+      	 		메세지 담을 영역
+      	 	</div>	
+      		
+      		<div>
+      			<textArea id="msgContent" style="width:200px; height:200px;"></textArea>
+      			<button id="sendMsg">전송</button>
+      		</div>
+      
+      </div>
+</body>
+
+<script>
+    var socket = io();
+    
+    socket.on('connect',function(){
+            console.log('서버와 연결');
+    });
+	
+    $('#sendMsg').on('click',function(){
+    	
+    	 socket.emit('sendMsg',{msg : $('#msgContent').val()});
+    	
+    });
+   
+    
+    
+    
+    // socket.on('serverMsg',function(data){
+    //    var msg = data['msg'];
+    //    console.log(msg);
+    // });
+
+    // socket.on('serverAllMsg',function(data){
+    //     console.log(data['msg']);
+
+    // });
+
+
+    
+    function joinRoom1(){
+        console.log('1번방 동작');
+        socket.emit('joinRoom',{room : '1번방'});     
+    }
+    function joinRoom2(){
+        socket.emit('joinRoom',{room : '2번방'});     
+    }
+    socket.on('roomChange',function(data){
+            console.log(data.room +'로 방이 변경되었습니다.');
+    });
+    
+    socket.on('resToRoom',function(data){
+        var msg = data.msg;
+        console.log(msg);
+    });
+    function sendToRoom1(){
+        socket.emit('sendToRoom1',{msg : "1번방에만 보이는 메세지"});
+    }
+
+    function sendToRoom2(){
+        socket.emit('sendToRoom2',{msg : "2번방에만 보이는 메세지"});
+    }
+    
+	
+ 
+    
+</script> 
+</html>

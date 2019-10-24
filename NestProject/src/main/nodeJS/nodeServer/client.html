@@ -1,0 +1,64 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
+    
+</head>
+<body>
+    <h1>채팅 테스트</h1>
+    <button value="1번방" onclick="joinRoom1();">1번방</button>
+    <button value="1번방" onclick="sendToRoom1();">1번방 메세지 전송</button>
+    <button value="2번방" onclick="joinRoom2();">2번방</button>
+    <button value="1번방" onclick="sendToRoom2();">2번방 메세지 전송</button>
+</body>
+
+<script>
+    var socket = io();
+    
+    socket.on('connect',function(){
+            console.log('서버와 연결');
+    });
+
+    // socket.on('serverMsg',function(data){
+    //    var msg = data['msg'];
+    //    console.log(msg);
+    // });
+
+    // socket.on('serverAllMsg',function(data){
+    //     console.log(data['msg']);
+
+    // });
+
+
+    
+    function joinRoom1(){
+        console.log('1번방 동작');
+        socket.emit('joinRoom',{room : '1번방'});     
+    }
+    function joinRoom2(){
+        socket.emit('joinRoom',{room : '2번방'});     
+    }
+    socket.on('roomChange',function(data){
+            console.log(data.room +'로 방이 변경되었습니다.');
+    });
+    
+    socket.on('resToRoom',function(data){
+        var msg = data.msg;
+        console.log(msg);
+    });
+    function sendToRoom1(){
+        socket.emit('sendToRoom1',{msg : "1번방에만 보이는 메세지"});
+    }
+
+    function sendToRoom2(){
+        socket.emit('sendToRoom2',{msg : "2번방에만 보이는 메세지"});
+    }
+ 
+    
+</script>
+
+
+</html>

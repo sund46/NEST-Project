@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC
+"-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="boardcomment">
+	<resultMap id="resultBoardComment" type="boardcomment">
+		<result property="bcnickname" column="bcnickname"/>
+	</resultMap>
+	
+	<select id="selectBoardCommentList" parameterType="boardcomment" resultType="boardcomment" resultMap="resultBoardComment"> 
+		SELECT CNO, MNO, BNO, CCONTENT, CLEVEL, LIKECOUNT, TO_CHAR(BCDATE, 'YYYY-MM-DD HH:MI:SS') BCDATE, BCDELETE,
+				(SELECT NICKNAME FROM MEMBER WHERE MNO = BC.MNO AND BC.BCDELETE = 'N') BCNICKNAME 
+		FROM BCOMMENT BC
+		WHERE BNO=#{bno} AND BCDELETE='N'
+		ORDER BY BCDATE DESC
+	</select>
+	
+	<select id="selectBoardCommentTotalContents" resultType="_int">
+		SELECT COUNT(*) 
+		FROM BCOMMENT
+		WHERE BNO=#{bno} AND BCDELETE='N'
+	</select>
+	
+	<insert id="insertBoardComment" parameterType="boardcomment">
+		INSERT INTO BCOMMENT(CNO, MNO, BNO, CCONTENT, CLEVEL, LIKECOUNT, BCDATE, BCDELETE) 
+		VALUES (SEQ_CNO.NEXTVAL, #{mno}, #{bno}, #{ccontent}, DEFAULT, DEFAULT, DEFAULT, DEFAULT)
+		
+		<selectKey keyProperty="cno" resultType="_int" order="AFTER"> 
+			SELECT SEQ_CNO.CURRVAL FROM DUAL
+		</selectKey>
+	</insert>
+	
+	<update id="deleteBoardComment" parameterType="boardcomment">
+		UPDATE BCOMMENT SET BCDELETE = 'Y' 
+		WHERE CNO = #{cno}
+	</update>
+	
+</mapper>

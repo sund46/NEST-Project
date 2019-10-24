@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC
+"-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Business_mapper">
+
+		<resultMap type="Member" id="bmEnrollDate">
+			<result property="mNo" column="mno"/>
+			<result property="userId" column="userId"/>
+			<result property="userName" column="username"/>
+			<result property="admin" column="admin"/>
+			<result property="approval" column="approval"/>
+			<result property="spaceEnrollDate" column="enrolldate"/>
+		</resultMap>
+		
+		<resultMap type="BusinessMember" id="bmMember">
+			<result property="bizNo" column="bizNo"/>
+			<result property="mNo" column="mNo"/>
+			<result property="admin" column="admin"/>
+			<result property="invitation" column="invitation"/>
+			<result property="approval" column="approval"/>
+			<result property="enrolldate" column="enrolldate"/>
+			<result property="active" column="active"/>
+		</resultMap>
+
+		<select id="selectBizNo" resultType="_int">
+			SELECT BIZNO FROM BUSINESS WHERE ROWNUM = 1 ORDER BY 1 DESC
+		</select>
+		
+		<select id="inviteBizNo" resultType="_int">
+			SELECT BIZNO FROM BUSINESS_MEMBER WHERE MNO = #{mNo}
+		</select>
+		
+		<select id="inviteMNo" resultType="_int">
+			SELECT MNO FROM MEMBER WHERE USERID = #{userId}
+		</select>
+		
+		<!-- 승인 대기 사용자 -->
+		<select id="approvalN" resultMap="bmEnrollDate">
+			SELECT MNO, USERID, USERNAME, BM.ADMIN, BM.INVITATION, BM.APPROVAL, BM.ENROLLDATE FROM MEMBER
+			JOIN (SELECT * FROM BUSINESS_MEMBER
+			      JOIN (SELECT BIZNO FROM BUSINESS_MEMBER WHERE MNO = #{mNo}) USING(BIZNO)
+			      WHERE ADMIN = 'N' AND APPROVAL = 'N') BM USING(MNO)
+		</select>
+		
+		<!-- 승인 대기 사용자 수 -->
+		<select id="totalApprovalN" resultType="_int">
+			SELECT COUNT(*) FROM BUSINESS_MEMBER
+			JOIN (SELECT BIZNO FROM BUSINESS_MEMBER WHERE MNO = #{mNo}) USING(BIZNO)
+			WHERE ADMIN = 'N' AND INVITATION = 'Y' AND APPROVAL = 'N'
+		</select>
+		
+		<!-- 승인 사용자 리스트 -->
+		<select id="MemberListApprovalY" resultMap="bmEnrollDate">
+			SELECT MNO, USERID, USERNAME, BM.ADMIN, BM.INVITATION, BM.APPROVAL, BM.ENROLLDATE FROM MEMBER
+			JOIN (SELECT * FROM BUSINESS_MEMBER
+			      JOIN (SELECT BIZNO FROM BUSINESS_MEMBER WHERE MNO = #{mNo}) USING(BIZNO)
+			      WHERE APPROVAL = 'Y' AND ADMIN = 'N' AND ACTIVE = 'Y') BM USING(MNO) 
+		</select>
+		
+		<!-- 비즈니스 사용자 수 -->
+		<select id="totalBusinessMember" resultType="_int">
+			SELECT COUNT(DISTINCT MNO) FROM BUSINESS_MEMBER
+			JOIN (SELECT BIZNO FROM BUSINESS_MEMBER WHERE MNO = #{mNo}) USING(BIZNO)
+			WHERE INVITATION = 'Y' AND APPROVAL = 'Y'
+		</select>
+		
+		<!-- 비즈니스 관리자 수 -->
+		<select id="totalBusinessAdmin" resultType="_int">
+			SELECT COUNT(*) FROM BUSINESS_MEMBER
+			JOIN (SELECT BIZNO FROM BUSINESS_MEMBER WHERE MNO = #{mNo}) USING(BIZNO)
+			WHERE ADMIN = 'Y'		
+		</select>
+		
+		<!-- 비즈니스 전체 스페이스 -->
+		<select id="totalBusinessSpace" resultType="_int">
+			SELECT COUNT(*) FROM SPACE
+			WHERE BIZNO = (SELECT BIZNO FROM BUSINESS_MEMBER WHERE MNO = #{mNo})
+		</select>
+		
+		<!-- 비즈니스 사용자 리스트 -->
+		<select id="businessMemberList" resultMap="bmEnrollDate">
+			SELECT MNO, USERID, USERNAME, BM.ADMIN, BM.APPROVAL, BM.ENROLLDATE FROM MEMBER
+			JOIN (SELECT * FROM BUSINESS_MEMBER
+			      JOIN (SELECT BIZNO FROM BUSINESS_MEMBER WHERE MNO = #{mNo}) USING(BIZNO)
+			      WHERE APPROVAL = 'Y') BM USING(MNO)
+		</select>
+		
+		<!-- 비즈니스 관리자 리스트 -->
+		<select id="businessAdminList" resultMap="bmEnrollDate">
+			SELECT MNO, USERID, USERNAME, BM.ADMIN, BM.APPROVAL, BM.ENROLLDATE FROM MEMBER
+			JOIN (SELECT * FROM BUSINESS_MEMBER
+			      JOIN (SELECT BIZNO FROM BUSINESS_MEMBER WHERE MNO = #{mNo}) USING(BIZNO)
+			      WHERE APPROVAL = 'Y' AND ADMIN = 'Y') BM USING(MNO)
+		</select>
+		
+		<!-- 승인된 사용자의 비즈니스명 -->
+		<select id="bizName" resultType="string">
+			SELECT DISTINCT BIZNAME FROM BUSINESS
+			JOIN (SELECT * FROM BUSINESS_MEMBER
+				  JOIN (SELECT BIZNO FROM BUSINESS_MEMBER WHERE MNO = #{mNo}) USING(BIZNO)
+				  WHERE APPROVAL = 'Y') BM USING(BIZNO)
+		</select>
+		
+		<select id="maximumMember" resultType="_int">
+			SELECT MAXIMUMMEMBER FROM BUSINESS WHERE BIZNO = #{bizNo}
+		</select>
+		
+		<!-- 비즈니스 관리자 여부 -->
+		<select id="bmAdmin" resultType="string">
+			SELECT BM.ADMIN FROM MEMBER
+			JOIN (SELECT * FROM BUSINESS_MEMBER WHERE MNO = #{mNo}) BM USING(MNO)
+		</select>
+		
+		<!-- 비활성화 리스트 -->
+		<select id="activeListN" resultMap="bmEnrollDate">
+			SELECT MNO, USERID, USERNAME, BM.ADMIN, BM.INVITATION, BM.APPROVAL, BM.ENROLLDATE FROM MEMBER
+			JOIN (SELECT * FROM BUSINESS_MEMBER
+			      JOIN (SELECT BIZNO FROM BUSINESS_MEMBER WHERE MNO = #{mNo}) USING(BIZNO)
+			      WHERE ADMIN = 'Y' AND ACTIVE = 'Y') BM USING(MNO) 
+		</select>
+		
+		<!-- 비즈니스 노트북 개수  -->
+		<select id="countNoteBook" resultType="_int">
+			SELECT COUNT(*) FROM NOTEBOOK
+			JOIN (SELECT MNO FROM BUSINESS_MEMBER WHERE MNO = #{mNo}) USING(MNO)
+		</select>
+		
+		<!-- 비즈니스 노트 개수 -->
+		<select id="countNote" resultType="_int">
+			SELECT COUNT(*) FROM NOTE
+			JOIN (SELECT MNO FROM BUSINESS_MEMBER WHERE MNO = #{mNo}) USING(MNO)
+		</select>
+		
+		<!-- 사용자 활성화 여부 -->
+		<select id="memberActiveY" resultMap="bmMember">
+			<!-- SELECT BM.ACTIVE FROM MEMBER
+			JOIN (SELECT * FROM BUSINESS_MEMBER WHERE MNO = #{mNo}) BM USING(MNO) -->
+			
+			SELECT BM.BIZNO, MNO, BM.ADMIN, BM.INVITATION, BM.APPROVAL, BM.ENROLLDATE, BM.ACTIVE FROM MEMBER
+			JOIN (SELECT * FROM BUSINESS_MEMBER WHERE MNO = #{mNo}) BM USING(MNO)
+		</select>
+		
+		<insert id="insertBusiness" parameterType="Business">
+			INSERT INTO BUSINESS
+			VALUES(SEQ_BIZNO.NEXTVAL, #{bizName}, 7)
+		</insert>
+		
+		<insert id="insertBusinessMemberAdmin" parameterType="BusinessMember">
+			INSERT INTO BUSINESS_MEMBER
+			VALUES(SEQ_BIZMNO.NEXTVAL, #{bizNo}, #{mNo}, 'Y', 'Y', 'Y', SYSDATE, DEFAULT)
+		</insert>
+		
+		<insert id="insertBusinessMember" parameterType="BusinessMember">
+			INSERT INTO BUSINESS_MEMBER
+			VALUES(SEQ_BIZMNO.NEXTVAL, #{bizNo}, #{mNo}, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT)
+		</insert>
+		
+		<update id="updateBusinessMemberY" parameterType="BusinessMember">
+			UPDATE BUSINESS_MEMBER SET INVITATION = 'Y', ENROLLDATE = SYSDATE WHERE MNO = #{mNo}
+		</update>
+		
+		<update id="updateBusinessMemberN" parameterType="BusinessMember">
+			UPDATE BUSINESS_MEMBER SET INVITATION = 'N' WHERE MNO = #{mNo}
+		</update>
+		
+		<update id="approvalY" parameterType="BusinessMember">
+			UPDATE BUSINESS_MEMBER SET APPROVAL = 'Y' WHERE MNO = #{mNo} AND INVITATION = 'Y'
+		</update>
+		
+		<update id="updateBizName" parameterType="Business">
+			UPDATE BUSINESS SET BIZNAME = #{bizName} WHERE BIZNO = #{bizNo}
+		</update>
+		
+		<update id="maxMemberM" parameterType="_int">
+			UPDATE BUSINESS SET MAXIMUMMEMBER = (MAXIMUMMEMBER - 1) WHERE BIZNO = #{bizNo}
+		</update>
+		
+		<update id="maxMemberP" parameterType="_int">
+			UPDATE BUSINESS SET MAXIMUMMEMBER = (MAXIMUMMEMBER + 1) WHERE BIZNO = #{bizNo}
+		</update>
+		
+		<!-- 관리자 권한 -->
+		<update id="bmAdminY" parameterType="_int">
+			UPDATE BUSINESS_MEMBER SET ADMIN = 'Y' WHERE MNO = #{mNo}
+		</update>
+		<update id="bmAdminN" parameterType="_int">
+			UPDATE BUSINESS_MEMBER SET ADMIN = 'N' WHERE MNO = #{mNo}
+		</update>
+		
+		<!-- 활성화 -->
+		<update id="activeY" parameterType="_int">
+			UPDATE BUSINESS_MEMBER SET ACTIVE = 'Y' WHERE MNO = #{mNo}
+		</update>
+		<update id="activeN" parameterType="_int">
+			UPDATE BUSINESS_MEMBER SET ACTIVE = 'N' WHERE MNO = #{mNo}
+		</update>
+		
+		<!-- 비즈니스 요청 거절 사용자 삭제 -->
+		<delete id="deleteBM">
+			DELETE FROM BUSINESS_MEMBER WHERE MNO = #{mNo}
+		</delete>
+		
+		
+</mapper>

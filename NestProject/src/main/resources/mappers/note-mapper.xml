@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC
+"-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="note">
+	
+	<resultMap id="note" type="note"/> 
+			
+	<insert id="firstSave" parameterType="note">
+		INSERT INTO NOTE VALUES(							
+			SEQ_NNO.NEXTVAL, #{mno}, #{nbno}, 1, 
+			#{ntitle}, #{ncontent}, 's1', DEFAULT,DEFAULT,DEFAULT)
+	</insert>
+	
+	<select id="searchNote1" parameterType="note" resultType="note">
+		SELECT * FROM NOTE WHERE NTITLE LIKE '%'|| #{ntitle} || '%'  AND MNO = #{mno}
+	</select>
+	
+	<select id="searchNote2" parameterType="note" resultType="note">
+		SELECT * FROM NOTE WHERE NCONTENT LIKE '%'|| #{ntitle} || '%' AND MNO = #{mno}
+	</select>
+	
+	
+	<select id="noteDetail" parameterType="_int" resultType="note">
+		SELECT * FROM NOTE WHERE NNO = #{nno}
+	</select>
+	
+	<select id="selectOneNote" parameterType="_int" resultMap="note"> 
+		SELECT * FROM NOTE WHERE NNO = #{nno}				
+	</select>
+	
+	
+	<select id="selectListNote" parameterType="note" resultType="note">
+		SELECT * FROM NOTE WHERE MNO = #{mno} AND TRASHCAN = #{trashcan} ORDER BY 1 DESC
+	</select>
+	
+	<select id="searchNno" parameterType="note" resultType="_int">
+		SELECT MAX(NNO) FROM NOTE WHERE MNO = #{mno}
+	</select>
+	
+	<insert id="copyNote" parameterType="_int">
+		INSERT INTO NOTE SELECT SEQ_NNO.NEXTVAL, MNO, NBNO, SPACENO, NTITLE, NCONTENT, SHARESCOPE, TRASHCAN, FIXED, SYSDATE FROM NOTE WHERE NNO = #{nno}
+	</insert>
+	
+	<update id="updateNote" parameterType="note">
+		UPDATE NOTE SET NTITLE = #{ntitle}, NCONTENT = #{ncontent}, NDATE=SYSDATE WHERE NNO = #{nno}
+	</update>
+	
+	
+	<update id="goTrash" parameterType="note">
+		UPDATE NOTE SET TRASHCAN= #{trashcan}, NDATE=SYSDATE WHERE NNO = #{nno}			
+	</update>
+	
+	<update id="goAllTrash" parameterType="note">
+		UPDATE NOTE SET TRASHCAN= #{trashcan}, NDATE=SYSDATE WHERE MNO = #{mno}			
+	</update>
+	
+	 
+	<update id="restoreTrash" parameterType="note">
+		UPDATE NOTE SET TRASHCAN= #{trashcan}, NDATE=SYSDATE WHERE NNO = #{nno}			
+	</update>
+	
+	<update id="moveNote" parameterType="note">
+		UPDATE NOTE SET NBNO = #{nbno} WHERE NNO = #{nno}
+	</update>
+		
+	
+	<delete id="deleteOneTrash" parameterType="_int">
+		DELETE FROM NOTE WHERE NNO = #{nno}
+	</delete>
+	
+	
+	<delete id="deleteAllTrash" parameterType="_int" >
+		DELETE FROM NOTE WHERE MNO = #{mno} AND TRASHCAN = 'Y'			
+	</delete>
+	
+	
+</mapper>

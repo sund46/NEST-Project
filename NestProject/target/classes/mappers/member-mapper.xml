@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC
+"-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Member_mapper">
+
+		<resultMap type="Member" id="businessAdmin">
+			<!-- <id property="mNo" column="mno"/> -->
+			<result property="mNo" column="mno"/>
+			<result property="userName" column="username"/>
+			<result property="spaceEnrollDate" column="enrolldate"/>
+		</resultMap>
+
+		<insert id="insertMember" parameterType="Member">
+			INSERT INTO MEMBER VALUES(SEQ_MNO.NEXTVAL,DEFAULT,DEFAULT,#{userId},#{password},#{userName},#{nickName},#{phone},#{ageGroup},#{purpose},#{jobField},DEFAULT,DEFAULT,DEFAULT,DEFAULT)
+		</insert>
+		
+		<select id="selectMember" parameterType="string" resultType="Member">
+			 SELECT * FROM MEMBER WHERE USERID=#{userId}
+		</select>
+		
+		<select id="idDupCheck" parameterType="string" resultType="_int">
+			SELECT COUNT(*) FROM MEMBER WHERE USERID= #{userId}
+		</select>
+		
+		<select id="nickDupCheck" parameterType="string" resultType="_int">
+			SELECT COUNT(*) FROM MEMBER WHERE NICKNAME = #{nickName}
+		</select>
+		
+		<select id="searchId" parameterType="Member" resultType="Member">
+			SELECT * FROM MEMBER WHERE USERNAME=#{userName} AND PHONE=#{phone}
+		</select>
+		
+		<select id="searchPwd" parameterType="Member" resultType="Member">
+			SELECT * FROM MEMBER WHERE USERID=#{userId} AND USERNAME=#{userName} AND PHONE=#{phone}
+		</select>
+		
+		<select id="selectMno" parameterType="string" resultType="_int">
+			SELECT MNO FROM MEMBER WHERE USERID=#{userId}
+		</select>
+		
+		<update id="resetPwd" parameterType="Member">
+			UPDATE MEMBER SET PASSWORD=#{password} WHERE USERID=#{userId}
+		</update>
+		
+		<select id="selectBizMemberList" parameterType="_int" resultType="Member">
+			SELECT * FROM MEMBER WHERE BIZNO = #{bizNo}
+		
+		</select>
+		
+		<!-- 사용자 관리자 유무 -->
+		<select id="memberAdmin" parameterType="_int" resultType="string">
+			SELECT BM.ADMIN FROM MEMBER M
+			JOIN (SELECT * FROM BUSINESS_MEMBER WHERE MNO = #{mNo}) BM USING(MNO)
+		</select>
+		
+		<!-- 비즈니스 초대 요청 여부 -->
+		<select id="memberInvitation" parameterType="_int" resultType="string">
+			SELECT BM.INVITATION FROM MEMBER
+			JOIN (SELECT * FROM BUSINESS_MEMBER WHERE MNO = #{mNo} AND INVITATION = 'N') BM USING(MNO)
+		</select>
+		
+		<!-- 사용자 비즈니스 등록 -->
+		<update id="updateMemberBizNo" parameterType="Member">
+			UPDATE MEMBER SET BIZNO = #{bizNo} WHERE MNO = #{mNo}
+		</update>
+		
+		<!-- 프리미엄 업데이트 -->
+		<update id="memberPremiumUpdate" parameterType="Member">
+			UPDATE MEMBER SET SERVICENO = 2 WHERE MNO = #{mNo}
+		</update>
+		
+		<!-- 비즈니스 업데이트 -->
+		<update id="memberBusinessUpdate" parameterType="Member">
+			UPDATE MEMBER SET SERVICENO = 3 WHERE MNO = #{mNo}
+		</update>
+		
+</mapper>

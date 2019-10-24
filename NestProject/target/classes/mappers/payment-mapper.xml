@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC
+"-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="payment">
+
+		<select id="selectServiceList" resultType="Service">
+			SELECT * FROM SERVICE
+		</select>
+		
+		<insert id="insertPremiumPayment">
+			INSERT INTO PAYMENT
+			VALUES(SEQ_PNO.NEXTVAL, #{mNo}, 2, 100, SYSDATE)
+		</insert>
+		
+		<insert id="insertBusinessPayment">
+			INSERT INTO PAYMENT
+			VALUES(SEQ_PNO.NEXTVAL, #{mNo}, 3, 100, SYSDATE)
+		</insert>
+		
+</mapper>

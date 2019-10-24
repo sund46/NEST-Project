@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC
+"-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="noteBook">
+	
+	<resultMap id="notebook" type="notebook"/>
+	<resultMap id="note" type="note"/>
+	
+	<select id="selectOneNoteBook" parameterType="_int" resultType="note">                                    
+		SELECT * FROM NOTE WHERE NBNO = #{nbno} AND TRASHCAN='N' ORDER BY 1 DESC		
+	</select>
+	
+	<select id="selectListNoteBook" parameterType="_int" resultType="notebook">         
+		SELECT * FROM NOTEBOOK WHERE MNO = #{mno}
+	</select>
+	
+	<select id="searchNbno" parameterType="_int" resultType="_int">
+		SELECT NBNO FROM (SELECT ROWNUM, NBNO FROM NOTEBOOK WHERE MNO = #{mno}) WHERE ROWNUM = 1
+	</select>
+	
+	
+	<update id="updateNoteBook" parameterType="noteBook">
+		UPDATE NOTEBOOK 
+		SET NBTITLE = #{nbtitle},
+		    NBCONTENT = #{nbcontent},
+		    NBTYPE = #{nbtype}		    
+		WHERE MNO = #{mno}
+	</update>
+	
+	<update id="trashGo" parameterType="note">
+		UPDATE NOTE SET TRASHCAN= #{trashcan} WHERE NNO = #{nno}
+	</update>
+	
+	<update id="changeTitle" parameterType="notebook">
+		UPDATE NOTEBOOK SET NBTITLE= #{nbtitle} WHERE NBNO = #{nbno}
+	</update>
+	
+	<insert id="insertOneRenote" parameterType="_int" >         
+		INSERT INTO NOTE SELECT SEQ_NNO.NEXTVAL, MNO, NBNO, SPACENO, NTITLE, NCONTENT, SHARESCOPE, TRASHCAN, SYSDATE FROM NOTE WHERE NNO = #{nno}
+	</insert>
+	
+	<delete id="deleteNoteBook" parameterType="_int">
+		DELETE FROM NOTEBOOK WHERE NBNO = #{nbno}
+	</delete>
+	
+	<insert id="insertNoteBook" parameterType="notebook">
+		INSERT INTO NOTEBOOK VALUES(							
+			SEQ_NBNO.NEXTVAL, #{mno}, #{nbtitle}, 
+			'내용없음', '요리',SYSDATE)
+	</insert>
+</mapper>

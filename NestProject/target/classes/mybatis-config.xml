@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE configuration PUBLIC
+"-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<settings>
+		<setting name="jdbcTypeForNull" value="NULL"/>
+	</settings>
+
+	<typeAliases>
+		<typeAlias type="com.nestCor.nest.member.model.vo.Member" alias="Member"/>
+		<typeAlias type="com.nestCor.nest.member.model.vo.SpaceMember" alias="SpaceMember"/>
+		<typeAlias type="com.nestCor.nest.services.space.model.vo.Space" alias="Space"/>
+		<typeAlias type="com.nestCor.nest.services.board.model.vo.Board" alias="board"/>
+		<typeAlias type="com.nestCor.nest.services.boardComment.model.vo.BoardComment" alias="boardcomment"/>
+		<typeAlias type="com.nestCor.nest.services.space.model.vo.ChatRoom" alias="ChatRoom"/>
+		<typeAlias type="com.nestCor.nest.services.note.model.vo.Note"
+		           alias="note"/>
+		<typeAlias type="com.nestCor.nest.services.notebook.model.vo.NoteBook"
+		           alias="noteBook"/>
+		           
+		<typeAlias type="com.nestCor.nest.business.model.vo.BusinessMember" alias="BusinessMember"/>           
+		<typeAlias type="com.nestCor.nest.business.model.vo.Business" alias="Business"/>
+		<typeAlias type="com.nestCor.nest.payment.model.vo.Payment" alias="Payment"/>
+		<typeAlias type="com.nestCor.nest.payment.model.vo.Service" alias="Service"/>
+		<typeAlias type="com.nestCor.nest.services.template.model.vo.Template" alias="template"/>
+		
+	</typeAliases>
+	
+</configuration>
