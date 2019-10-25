@@ -264,7 +264,7 @@ private String uploadFilesFromTinyMCE(String prefix, MultipartFile files[], bool
 * 게시글 공유, 삭제, 수정, 작성이 가능합니다.
 * 카테고리 별로 공유할 수 있도록 Modal을 띄워 설정하도록 하였습니다.
 ![Alt text](images/community.png)
-![Alt text](images/community3.png)
+![Alt text](images/community3.PNG)
 ![Alt text](images/community4.png)
 ![Alt text](images/comment.png)
 ## 스페이스
