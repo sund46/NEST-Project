@@ -403,7 +403,7 @@ socket.on('callChatLogs',function(data){
 </code></pre>
 
 ## 채팅 전송 및 화면 상에 업데이트
-닉네임, Room 번호를 매개로 DB에 저장함과 동시에 Front에서도 채팅 내역을 업데이트 해준다.
+닉네임, Room 번호를 매개로 DB에 저장함과 동시에 Front에서도 채팅 내역을 업데이트 해줍니다.
 <pre><code>
 // 메세지 전송 이벤트 발생
 $('#sendMsg').on('click',function(){
