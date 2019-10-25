@@ -30,6 +30,7 @@ One-Page로 서비스에 대한 간략한 설명을 제공하도록 하였습니
 * 회원정보 등록시 DB에서 이메일의 중복 여부를 체크하여 중복되어있을 경우 중복된 이메일이라는 경고창과 함께 회원가입이 되지 않도록 하였습니다.
 * 이름은 2~10글자 이내로 한글 및 영문만 입력하게 하였습니다.
 * 비밀번호와 비밀번호 확인은 영문+숫자+특수문자 조합으로 8~16이내의 정보를 입력하지 않거나 둘의 값이 다를 경우 회원가입이 되지 않도록 하였습니다.
+<br><br>
 ![Alt text](images/join.PNG)
 ![Alt text](images/agreement.png)
 ### ID / PWD 찾기
@@ -39,6 +40,7 @@ One-Page로 서비스에 대한 간략한 설명을 제공하도록 하였습니
 ## 노트
 ![Alt text](images/tiny.png)
 ![Alt text](images/tinyMCE.png)
+<br><br>
 노트의 작성을 위하여 위지윅 에디서 TinyMCE API를 사용하였습니다.
 * 글꼴편집, 표 삽입, 코드 변환이 가능합니다.
 * 이미지편집이 가능하지만, 이미지업로드와 파일업로드 기능을 제공하지 않아 커스터마이징을 통해 직접 기능을 구현하였습니다.
@@ -238,31 +240,39 @@ private String uploadFilesFromTinyMCE(String prefix, MultipartFile files[], bool
 * 노트를 작성할 수 있습니다.
 * 모든 노트 메뉴를 통해 작성한 모든 노트를 확인 할 수 있습니다.
 * 노트를 삭제, 수정, 복사가 가능합니다.
+<br><br>
 ![Alt text](images/note1.png)
 ![Alt text](images/menu.PNG)
+<br><br>
 #### 이동
 노트를 다른 노트북으로 이동이 가능합니다.
+<br><br>
 ![Alt text](images/move.png)
 ### 노트북
 노트북은 노트들을 사용자의 의도대로 분류하여 저장할 수 있습니다.
 * 새 노트북을 추가할 수 있습니다.
 * 노트북의 이름 수정, 삭제가 가능합니다.
+<br><br>
 ![Alt text](images/notebook.png)
 ![Alt text](images/newnotebook.PNG)
 ### 템플릿
 사용자가 용이하게 노트필기를 할 수 있도록 템플릿을 제공합니다.
 * 개인이 템플릿을 제작하여 저장할 수 있습니다.
 * 저장한 템플릿을 커뮤니티를 통해 공유가 가능합니다.
+<br><br>
 ![Alt text](images/template1.png)
 ![Alt text](images/template2.png)
 ### 휴지통
 삭제한 노트들은 휴지통으로 이동하여 관리하게 됩니다.
 * 휴지통에 있는 노트들을 휴지통비우기, 삭제, 복원이 가능합니다.
+* 휴지통에 있는 노트들의 trashCan 컬럼은 모두 Y, 복원 후 N으로 변경됩니다.
+<br><br>
 ![Alt text](images/trash.png)
 ### 커뮤니티
 사용자가 개인저장소의 노트를 공유하거나 작성할 수 있는 페이지입니다.
 * 게시글 공유, 삭제, 수정, 작성이 가능합니다.
 * 카테고리 별로 공유할 수 있도록 Modal을 띄워 설정하도록 하였습니다.
+<br><br>
 ![Alt text](images/community.png)
 ![Alt text](images/community3.PNG)
 ![Alt text](images/community4.png)
@@ -271,19 +281,23 @@ private String uploadFilesFromTinyMCE(String prefix, MultipartFile files[], bool
 그룹 사용자들 만의 Space 공간입니다. 
 ### 스페이스 생성
 스페이스를 생성할 수 있습니다.
+<br><br>
 ![Alt text](images/space1.PNG)
 ### 노트 조회 / 보기
 함께 사용하고 있는 노트북, 노트를 확인할 수 있습니다.
+<br><br>
 ![Alt text](images/space2.png)
 ### 중요 노트 고정
 그룹 사용자는 중요 노트로 선정하여 고정시킬 수 있습니다.
 * 체크 된 노트의 Primary key를 전달하여 Fixed 컬럼 값을 ‘Y’로 바꿔 줍니다 
 * 반대의 경우 ‘N’으로 바꿔줍니다.
+<br><br>
 ![Alt text](images/space3.PNG)
 ### 실시간 채팅 서비스
 그룹 사용자 간 1대1 채팅 서비스입니다.
 * 같은 비즈니스 멤버 수를 보이도록 하였습니다.
 * 채팅상대목록을 조회할 수 있습니다.
+<br><br>
 ![Alt text](images/chat2.png)
 #### 채팅 서버 및 MongoDB 연결
 * Node.js를 사용한 채팅서버를 작동시키고 이를 이용해 소켓 객체를 만듭니다.
@@ -428,3 +442,7 @@ socket.on('serverResponse',function(data){
 
 
 </code></pre>
+
+## 프로젝트 후기
+### 참여소감
+이번 프로젝트는 세미프로젝트의 경험을 살려 계획을 가지고 진행을 했기 때문에 구현에 쓰이는 시간보다 디테일한 부분까지 고쳐 나가면서 완성도를 높이는 과정에서 많은 시간은 들였다. 테스트의 중요성을 몸소 깨닫고 기간 내에 완료하여 오류 없이 완성도 높은 기능 구현을 해서 뿌듯했다.
